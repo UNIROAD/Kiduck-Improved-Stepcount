@@ -3,7 +3,7 @@
 float threshold = 0.8;
 float xavg, yavg, zavg;
 int steps;
-unsigned long start_t, elapsed_t;
+unsigned long start_t;
 unsigned long crit_t=100;
 bool st_flag = false, t_flag=false;
 
@@ -30,14 +30,11 @@ void loop(){
 
 bool elapsed_time_check(){
     if(!t_flag){
-        start_t = millis();
         t_flag = true;
-    }else{
-        elapsed_t = millis()-start_t;
-        if(elapsed_t>=crit_t){
-            t_flag = false;
-            return true;
-        }
+        start_t = millis();
+    }else if(millis()-start_t>=crit_t){
+        t_flag = false;
+        return true;
     }
     return false;
 }
