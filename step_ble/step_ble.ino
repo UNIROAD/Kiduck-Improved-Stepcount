@@ -3,25 +3,12 @@
 float threshold = 0.8;
 float xavg, yavg, zavg;
 int steps;
-unsigned long start_t;
-unsigned long crit_t=100;
+unsigned long start_t, crit_t=100;
 bool st_flag = false, t_flag=false;
 
 void setup(){
-  Serial.begin(9600);
-  while (!Serial);
-  Serial.println("Started");
-
-  if (!IMU.begin()) {
-    Serial.println("Failed to initialize IMU!");
-    while (1);
-  }
-
-  Serial.print("Accelerometer sample rate = ");
-  Serial.print(IMU.accelerationSampleRate());
-  Serial.println("Hz");
+  LSM9DS1_setup();
   calibrate();
-
 }
 
 void loop(){
@@ -51,8 +38,7 @@ void step_count(){
     totave = (totvect + prev_totvect) / 2 ;
     prev_totvect = totvect;
 
-    Serial.println("totave");
-    Serial.println(totave);
+    Serial.println("totave"); Serial.println(totave);
 
     if(totave>threshold && !st_flag){
         steps++;
@@ -62,9 +48,22 @@ void step_count(){
     if(totave<threshold && st_flag) st_flag = false;
     if(steps<0) steps = 0;
 
-    Serial.println('\n');
-    Serial.print("steps: ");
-    Serial.println(steps);
+    Serial.println('\n'); Serial.print("steps: "); Serial.println(steps);
+}
+
+void LSM9DS1_setup(){
+  Serial.begin(9600);
+  while (!Serial);
+  Serial.println("Started");
+
+  if (!IMU.begin()) {
+    Serial.println("Failed to initialize IMU!");
+    while (1);
+  }
+
+  Serial.print("Accelerometer sample rate = ");
+  Serial.print(IMU.accelerationSampleRate());
+  Serial.println("Hz"); 
 }
 
 void calibrate(){
